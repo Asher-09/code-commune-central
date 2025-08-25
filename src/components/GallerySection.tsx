@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { X, ZoomIn } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
 
 const GallerySection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const galleryItems = [
@@ -55,9 +57,9 @@ const GallerySection = () => {
   ];
 
   return (
-    <section id="gallery" className="py-20 px-4 bg-muted/20">
+    <section ref={ref} id="gallery" className="py-20 px-4 bg-muted/20">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
             Club Gallery
           </h2>
@@ -67,7 +69,7 @@ const GallerySection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children ${isVisible ? 'visible' : ''}`}>
           {galleryItems.map((item) => (
             <Card
               key={item.id}

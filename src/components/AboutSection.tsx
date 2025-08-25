@@ -1,7 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Code2, Lightbulb, Trophy, Rocket } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const AboutSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
   const features = [
     {
       icon: Code2,
@@ -34,9 +36,9 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-20 px-4">
+    <section ref={ref} id="about" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
             About CodeClub
           </h2>
@@ -47,7 +49,7 @@ const AboutSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 stagger-children ${isVisible ? 'visible' : ''}`}>
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -77,7 +79,7 @@ const AboutSection = () => {
         </div>
 
         {/* Mission Statement */}
-        <Card className="p-12 glass-card text-center">
+        <Card className={`p-12 glass-card text-center scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <h3 className="text-2xl md:text-3xl font-bold mb-6 gradient-text">
             Our Mission
           </h3>

@@ -16,7 +16,6 @@ const Navigation = () => {
   const panels = [
     { name: "Admin Panel", icon: Shield, variant: "admin" as const },
     { name: "Member Panel", icon: Users, variant: "member" as const },
-    { name: "Visitor Panel", icon: Eye, variant: "visitor" as const },
   ];
 
   return (
@@ -36,7 +35,14 @@ const Navigation = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors scroll-smooth"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector(item.href)?.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }}
                 >
                   {item.name}
                 </a>
@@ -81,7 +87,16 @@ const Navigation = () => {
                 key={item.name}
                 href={item.href}
                 className="text-muted-foreground hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  setTimeout(() => {
+                    document.querySelector(item.href)?.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }, 100);
+                }}
               >
                 {item.name}
               </a>

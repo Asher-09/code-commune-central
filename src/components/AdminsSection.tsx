@@ -2,8 +2,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Github, Linkedin, Mail, Star } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const AdminsSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
   const admins = [
     {
       id: 1,
@@ -60,9 +62,9 @@ const AdminsSection = () => {
   ];
 
   return (
-    <section id="admins" className="py-20 px-4">
+    <section ref={ref} id="admins" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
             Meet Our Admins
           </h2>
@@ -72,7 +74,7 @@ const AdminsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 stagger-children ${isVisible ? 'visible' : ''}`}>
           {admins.map((admin, index) => (
             <Card
               key={admin.id}
@@ -139,7 +141,7 @@ const AdminsSection = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center mt-16">
+        <div className={`text-center mt-16 scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <Card className="p-8 glass-card max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold mb-4 gradient-text">
               Want to Join the Leadership Team?

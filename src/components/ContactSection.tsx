@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const ContactSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -60,9 +62,9 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 bg-muted/20">
+    <section ref={ref} id="contact" className="py-20 px-4 bg-muted/20">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
             Get In Touch
           </h2>
@@ -74,7 +76,7 @@ const ContactSection = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <div className="space-y-6">
+          <div className={`space-y-6 scroll-reveal-left ${isVisible ? 'visible' : ''}`}>
             <h3 className="text-2xl font-bold mb-8 text-foreground">
               Contact Information
             </h3>
@@ -125,7 +127,7 @@ const ContactSection = () => {
           </div>
 
           {/* Contact Form */}
-          <Card className="p-8 glass-card">
+          <Card className={`p-8 glass-card scroll-reveal-right ${isVisible ? 'visible' : ''}`}>
             <h3 className="text-2xl font-bold mb-6 text-foreground">
               Send us a Message
             </h3>

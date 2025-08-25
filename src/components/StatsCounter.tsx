@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Shield, Users, GraduationCap } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const StatsCounter = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.3 });
   const [counts, setCounts] = useState({ admins: 0, members: 0, teachers: 0 });
-  const sectionRef = useRef<HTMLDivElement>(null);
 
   const targetCounts = {
     admins: 8,
@@ -36,23 +36,6 @@ const StatsCounter = () => {
       bgColor: "bg-secondary/10",
     },
   ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -89,9 +72,9 @@ const StatsCounter = () => {
   }, [isVisible]);
 
   return (
-    <section ref={sectionRef} className="py-20 px-4 bg-muted/30">
+    <section ref={ref} className="py-20 px-4 bg-muted/30">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <div className={`text-center mb-12 scroll-reveal ${isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
             Our Growing Community
           </h2>
@@ -101,16 +84,13 @@ const StatsCounter = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children ${isVisible ? 'visible' : ''}`}>
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <Card
                 key={stat.label}
-                className={`p-8 text-center glass-card hover:scale-105 transition-all duration-300 ${
-                  isVisible ? "animate-slide-up" : ""
-                }`}
-                style={{ animationDelay: `${index * 200}ms` }}
+                className="p-8 text-center glass-card hover:scale-105 transition-all duration-300"
               >
                 <div
                   className={`w-16 h-16 ${stat.bgColor} rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow`}
