@@ -3,63 +3,48 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Github, Linkedin, Mail, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Admin {
+  id: string;
+  name: string;
+  role: string;
+  avatar_url?: string;
+  expertise: string[];
+  description?: string;
+  achievements: string[];
+  social_links: any; // Using any to handle Json type from Supabase
+}
 
 const AdminsSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
-  const admins = [
-    {
-      id: 1,
-      name: "Alex Rodriguez",
-      role: "Club President",
-      expertise: ["Full Stack Development", "AI/ML", "Cloud Computing"],
-      description: "Leading the club with passion for innovation and mentoring aspiring developers. Expert in modern web technologies and machine learning applications.",
-      achievements: ["Google Summer of Code", "Microsoft MVP", "ACM ICPC Finalist"],
-      social: {
-        github: "alex-dev",
-        linkedin: "alex-rodriguez-dev",
-        email: "alex@codeclub.com",
-      },
-    },
-    {
-      id: 2,
-      name: "Sarah Chen",
-      role: "Vice President",
-      expertise: ["Mobile Development", "UI/UX Design", "DevOps"],
-      description: "Passionate about creating beautiful user experiences and efficient development workflows. Specializes in React Native and Flutter development.",
-      achievements: ["Google Developer Expert", "Hackathon Winner", "Open Source Contributor"],
-      social: {
-        github: "sarahc-dev",
-        linkedin: "sarah-chen-dev",
-        email: "sarah@codeclub.com",
-      },
-    },
-    {
-      id: 3,
-      name: "David Kim",
-      role: "Technical Lead",
-      expertise: ["Backend Development", "Microservices", "Database Design"],
-      description: "Architect of scalable systems and mentor for backend development. Leads technical workshops and system design sessions.",
-      achievements: ["AWS Certified", "Tech Conference Speaker", "Startup CTO Experience"],
-      social: {
-        github: "david-backend",
-        linkedin: "david-kim-tech",
-        email: "david@codeclub.com",
-      },
-    },
-    {
-      id: 4,
-      name: "Emily Watson",
-      role: "Events Coordinator",
-      expertise: ["Project Management", "Community Building", "Content Creation"],
-      description: "Orchestrates amazing events and builds strong community connections. Expert in bringing people together for learning and collaboration.",
-      achievements: ["Event Management Certified", "Community Leader Award", "Public Speaker"],
-      social: {
-        github: "emily-events",
-        linkedin: "emily-watson-pm",
-        email: "emily@codeclub.com",
-      },
-    },
-  ];
+  const [admins, setAdmins] = useState<Admin[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('admins')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        setAdmins(data || []);
+      } catch (error) {
+        console.error('Error fetching admins:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdmins();
+  }, []);
 
   return (
     <section ref={ref} id="admins" className="py-20 px-4">
@@ -74,71 +59,96 @@ const AdminsSection = () => {
           </p>
         </div>
 
-        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 stagger-children ${isVisible ? 'visible' : ''}`}>
-          {admins.map((admin, index) => (
-            <Card
-              key={admin.id}
-              className="p-8 glass-card hover:scale-105 transition-all duration-300 group"
-            >
-              <div className="flex items-start space-x-6">
-                {/* Avatar */}
-                <div className="w-20 h-20 bg-gradient-to-br from-primary via-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-background group-hover:animate-pulse-glow">
-                  {admin.name.split(' ').map(n => n[0]).join('')}
+        {loading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="p-8 glass-card animate-pulse">
+                <div className="flex items-start space-x-6">
+                  <div className="w-20 h-20 bg-gray-300 rounded-full"></div>
+                  <div className="flex-1">
+                    <div className="h-6 bg-gray-300 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded mb-3 w-1/2"></div>
+                    <div className="h-4 bg-gray-300 rounded mb-4"></div>
+                    <div className="flex gap-2 mb-4">
+                      <div className="h-6 bg-gray-300 rounded w-16"></div>
+                      <div className="h-6 bg-gray-300 rounded w-20"></div>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold text-foreground">
-                      {admin.name}
-                    </h3>
-                    <Star className="h-5 w-5 text-accent" />
-                  </div>
-                  
-                  <p className="text-primary font-semibold mb-3">{admin.role}</p>
-                  
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                    {admin.description}
-                  </p>
-
-                  {/* Expertise Tags */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {admin.expertise.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 stagger-children ${isVisible ? 'visible' : ''}`}>
+            {admins.map((admin) => (
+              <Card
+                key={admin.id}
+                className="p-8 glass-card hover:scale-105 transition-all duration-300 group"
+              >
+                <div className="flex items-start space-x-6">
+                  {/* Avatar */}
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary via-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-background group-hover:animate-pulse-glow">
+                    {admin.name.split(' ').map(n => n[0]).join('')}
                   </div>
 
-                  {/* Achievements */}
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-sm text-foreground mb-2">Key Achievements:</h4>
-                    <ul className="space-y-1">
-                      {admin.achievements.map((achievement) => (
-                        <li key={achievement} className="text-xs text-muted-foreground flex items-center">
-                          <div className="w-1 h-1 bg-primary rounded-full mr-2" />
-                          {achievement}
-                        </li>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-2xl font-bold text-foreground">
+                        {admin.name}
+                      </h3>
+                      <Star className="h-5 w-5 text-accent" />
+                    </div>
+                    
+                    <p className="text-primary font-semibold mb-3">{admin.role}</p>
+                    
+                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                      {admin.description}
+                    </p>
+
+                    {/* Expertise Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {admin.expertise.map((skill) => (
+                        <Badge key={skill} variant="secondary" className="text-xs">
+                          {skill}
+                        </Badge>
                       ))}
-                    </ul>
-                  </div>
+                    </div>
 
-                  {/* Social Links */}
-                  <div className="flex space-x-3">
-                    <Button variant="outline" size="sm" className="p-2">
-                      <Github className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" className="p-2">
-                      <Linkedin className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" className="p-2">
-                      <Mail className="h-4 w-4" />
-                    </Button>
+                    {/* Achievements */}
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-sm text-foreground mb-2">Key Achievements:</h4>
+                      <ul className="space-y-1">
+                        {admin.achievements.map((achievement) => (
+                          <li key={achievement} className="text-xs text-muted-foreground flex items-center">
+                            <div className="w-1 h-1 bg-primary rounded-full mr-2" />
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Social Links */}
+                    <div className="flex space-x-3">
+                      {admin.social_links.github && (
+                        <Button variant="outline" size="sm" className="p-2">
+                          <Github className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {admin.social_links.linkedin && (
+                        <Button variant="outline" size="sm" className="p-2">
+                          <Linkedin className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm" className="p-2">
+                        <Mail className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Call to Action */}
         <div className={`text-center mt-16 scroll-reveal ${isVisible ? 'visible' : ''}`}>
