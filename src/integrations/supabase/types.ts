@@ -14,7 +14,147 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admins: {
+        Row: {
+          achievements: string[] | null
+          avatar_url: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          expertise: string[] | null
+          id: string
+          is_active: boolean | null
+          name: string
+          role: string
+          social_links: Json | null
+          updated_at: string
+        }
+        Insert: {
+          achievements?: string[] | null
+          avatar_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          expertise?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          role: string
+          social_links?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          achievements?: string[] | null
+          avatar_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          expertise?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          role?: string
+          social_links?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string | null
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string | null
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string | null
+          subject?: string
+        }
+        Relationships: []
+      }
+      gallery_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string
+          is_active: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url: string
+          is_active?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      stats: {
+        Row: {
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          label: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          label: string
+          updated_at?: string
+          value: number
+        }
+        Update: {
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
