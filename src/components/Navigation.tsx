@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Code, Users, Shield, Eye } from "lucide-react";
+import { Menu, X, Code, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", href: "#home" },
     { name: "About", href: "#about" },
+    { name: "Events", href: "#events" },
     { name: "Gallery", href: "#gallery" },
     { name: "Admins", href: "#admins" },
     { name: "Contact", href: "#contact" },
-  ];
-
-  const panels = [
-    { name: "Admin Panel", icon: Shield, variant: "admin" as const },
-    { name: "Member Panel", icon: Users, variant: "member" as const },
   ];
 
   return (
@@ -50,19 +50,43 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Panel Buttons */}
-          <div className="hidden lg:flex items-center space-x-2">
-            {panels.map((panel) => (
-              <Button
-                key={panel.name}
-                variant="outline"
-                size="sm"
-                className="text-xs glow-button"
-              >
-                <panel.icon className="h-3 w-3 mr-1" />
-                {panel.name}
-              </Button>
-            ))}
+          {/* Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-3">
+            {user ? (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/dashboard')}
+                  className="flex items-center space-x-2"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Dashboard</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => signOut()}
+                  className="flex items-center space-x-2 text-red-500 hover:text-red-600"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign Out</span>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/auth')}
+                >
+                  Sign In
+                </Button>
+                <Button 
+                  className="glow-button"
+                  onClick={() => navigate('/auth')}
+                >
+                  Join Club
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -101,18 +125,57 @@ const Navigation = () => {
                 {item.name}
               </a>
             ))}
+            
+            {/* Mobile Auth Buttons */}
             <div className="pt-4 space-y-2">
-              {panels.map((panel) => (
-                <Button
-                  key={panel.name}
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start"
-                >
-                  <panel.icon className="h-4 w-4 mr-2" />
-                  {panel.name}
-                </Button>
-              ))}
+              {user ? (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      navigate('/dashboard');
+                      setIsOpen(false);
+                    }}
+                    className="w-full flex items-center justify-center space-x-2"
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Dashboard</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      signOut();
+                      setIsOpen(false);
+                    }}
+                    className="w-full flex items-center justify-center space-x-2 text-red-500 hover:text-red-600"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Sign Out</span>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      navigate('/auth');
+                      setIsOpen(false);
+                    }}
+                    className="w-full"
+                  >
+                    Sign In
+                  </Button>
+                  <Button 
+                    className="glow-button w-full"
+                    onClick={() => {
+                      navigate('/auth');
+                      setIsOpen(false);
+                    }}
+                  >
+                    Join Club
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
