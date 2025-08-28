@@ -247,6 +247,36 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletters: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          status: string | null
+          subscribed_at: string | null
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name?: string | null
+          status?: string | null
+          subscribed_at?: string | null
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          status?: string | null
+          subscribed_at?: string | null
+          unsubscribed_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -327,6 +357,26 @@ export type Database = {
       get_user_role: {
         Args: { user_id: string }
         Returns: string
+      }
+      submit_club_application: {
+        Args: {
+          applicant_email: string
+          applicant_name: string
+          experience_text?: string
+          github_user?: string
+          linkedin_user?: string
+          motivation_text: string
+          skills_list?: string[]
+        }
+        Returns: Json
+      }
+      subscribe_newsletter: {
+        Args: { subscriber_email: string; subscriber_name?: string }
+        Returns: Json
+      }
+      unsubscribe_newsletter: {
+        Args: { subscriber_email: string }
+        Returns: Json
       }
     }
     Enums: {
