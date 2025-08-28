@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Code, User, LogOut } from "lucide-react";
+import { Menu, X, Code, User, LogOut, UserPlus } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import JoinClubModal from "@/components/JoinClubModal";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,12 +80,14 @@ const Navigation = () => {
                 >
                   Sign In
                 </Button>
-                <Button 
-                  className="glow-button"
-                  onClick={() => navigate('/auth')}
-                >
-                  Join Club
-                </Button>
+                <JoinClubModal 
+                  trigger={
+                    <Button className="glow-button flex items-center space-x-2">
+                      <UserPlus className="h-4 w-4" />
+                      <span>Join Club</span>
+                    </Button>
+                  }
+                />
               </>
             )}
           </div>
@@ -165,15 +168,17 @@ const Navigation = () => {
                   >
                     Sign In
                   </Button>
-                  <Button 
-                    className="glow-button w-full"
-                    onClick={() => {
-                      navigate('/auth');
-                      setIsOpen(false);
-                    }}
-                  >
-                    Join Club
-                  </Button>
+                  <JoinClubModal 
+                    trigger={
+                      <Button 
+                        className="glow-button w-full flex items-center justify-center space-x-2"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <UserPlus className="h-4 w-4" />
+                        <span>Join Club</span>
+                      </Button>
+                    }
+                  />
                 </>
               )}
             </div>

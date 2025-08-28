@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Play, Users, Award } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
+import JoinClubModal from "@/components/JoinClubModal";
 
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -81,9 +82,19 @@ const HeroSlider = () => {
                   {slide.description}
                 </p>
                 
-                <Button size="lg" className="glow-button text-lg px-8 py-3">
-                  {slide.cta}
-                </Button>
+                {index === 0 ? (
+                  <JoinClubModal 
+                    trigger={
+                      <Button size="lg" className="glow-button text-lg px-8 py-3">
+                        {slide.cta}
+                      </Button>
+                    }
+                  />
+                ) : (
+                  <Button size="lg" className="glow-button text-lg px-8 py-3">
+                    {slide.cta}
+                  </Button>
+                )}
               </div>
             );
           })}

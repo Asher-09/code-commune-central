@@ -1,8 +1,15 @@
 import { Code, Heart, Github, Linkedin, Twitter, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const { toast } = useToast();
 
   const footerLinks = {
     club: [
@@ -31,6 +38,45 @@ const Footer = () => {
     { icon: Twitter, href: "#", label: "Twitter" },
     { icon: Mail, href: "#", label: "Email" },
   ];
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubscribing(true);
+    
+    try {
+      const { data, error } = await supabase.rpc('subscribe_newsletter', {
+        subscriber_email: email,
+        subscriber_name: null
+      });
+
+      if (error) throw error;
+
+      const result = data as { success: boolean; message: string };
+
+      if (result.success) {
+        toast({
+          title: "Success!",
+          description: result.message,
+        });
+        setEmail("");
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to subscribe to newsletter",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   return (
     <footer className="bg-card border-t border-border">
@@ -124,16 +170,24 @@ const Footer = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Get notified about upcoming events, workshops, and competitions.
             </p>
-            <div className="flex space-x-2">
-              <input
+            <form onSubmit={handleNewsletterSubmit} className="flex space-x-2">
+              <Input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="flex-1 bg-background border-border focus:border-primary"
               />
-              <Button size="sm" className="px-4">
-                Subscribe
+              <Button 
+                type="submit" 
+                size="sm" 
+                className="px-4"
+                disabled={isSubscribing}
+              >
+                {isSubscribing ? "..." : "Subscribe"}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
 
