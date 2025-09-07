@@ -6,9 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface Stat {
   id: string;
-  label: string;
-  value: number;
-  icon?: string;
+  stat_name: string;
+  stat_value: number;
+  updated_at: string;
 }
 
 interface CountState {
@@ -40,8 +40,7 @@ const StatsCounter = () => {
         const { data, error } = await supabase
           .from('stats')
           .select('*')
-          .eq('is_active', true)
-          .order('display_order', { ascending: true });
+          .order('stat_name', { ascending: true });
 
         if (error) {
           throw error;
@@ -72,7 +71,7 @@ const StatsCounter = () => {
       const stepTime = duration / steps;
 
       stats.forEach((stat) => {
-        const finalValue = stat.value;
+        const finalValue = stat.stat_value;
         const increment = finalValue / steps;
         let currentStep = 0;
 
@@ -122,7 +121,7 @@ const StatsCounter = () => {
         ) : (
           <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children ${isVisible ? 'visible' : ''}`}>
             {stats.map((stat) => {
-              const Icon = getIconComponent(stat.icon);
+              const Icon = getIconComponent(stat.stat_name);
               
               return (
                 <Card
@@ -135,11 +134,11 @@ const StatsCounter = () => {
                   
                   <div className="text-5xl font-bold mb-2 text-primary font-mono">
                     {counts[stat.id] || 0}
-                    {stat.label.includes('Events') && '+'}
+                    {stat.stat_name.includes('events') && '+'}
                   </div>
                   
                   <h3 className="text-xl font-semibold text-foreground mb-2">
-                    {stat.label}
+                    {stat.stat_name.charAt(0).toUpperCase() + stat.stat_name.slice(1)}
                   </h3>
                   
                   <div className="w-16 h-1 bg-gradient-to-r from-primary via-secondary to-accent mx-auto rounded-full" />

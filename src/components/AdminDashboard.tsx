@@ -25,20 +25,31 @@ interface MemberApplication {
   full_name: string;
   email: string;
   motivation: string;
-  experience: string;
+  experience_level: string;
   skills: string[];
   status: string;
   created_at: string;
   user_id: string;
+  discord_username?: string;
+  github_username?: string;
+  linkedin_username?: string;
+  reviewed_at?: string;
+  reviewed_by?: string;
 }
 
 interface Profile {
   id: string;
-  email: string;
+  user_id: string;
   full_name: string;
   role: string;
   status: string;
   created_at: string;
+  updated_at: string;
+  bio?: string;
+  skills?: string[];
+  discord_username?: string;
+  github_username?: string;
+  linkedin_username?: string;
 }
 
 interface Event {
@@ -200,7 +211,7 @@ const AdminDashboard = () => {
                 Admin Dashboard
               </h1>
               <p className="text-muted-foreground">
-                Welcome back, {profile?.full_name || profile?.email}
+                Welcome back, {profile?.full_name}
               </p>
             </div>
             <Button
@@ -290,10 +301,10 @@ const AdminDashboard = () => {
                         <p className="text-sm text-muted-foreground">{application.motivation}</p>
                       </div>
                       
-                      {application.experience && (
+                      {application.experience_level && (
                         <div>
-                          <p className="text-sm font-medium mb-1">Experience:</p>
-                          <p className="text-sm text-muted-foreground">{application.experience}</p>
+                          <p className="text-sm font-medium mb-1">Experience Level:</p>
+                          <p className="text-sm text-muted-foreground">{application.experience_level}</p>
                         </div>
                       )}
                       
@@ -353,7 +364,7 @@ const AdminDashboard = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <h3 className="font-semibold text-lg">{member.full_name || 'No name'}</h3>
-                        <p className="text-muted-foreground">{member.email}</p>
+                        <p className="text-muted-foreground">{member.user_id}</p>
                         <div className="flex space-x-2 mt-2">
                           <Badge variant={member.role === 'admin' ? 'default' : 'secondary'}>
                             {member.role}

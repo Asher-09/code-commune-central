@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +19,7 @@ const JoinClubModal = ({ trigger }: JoinClubModalProps) => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
     email: "",
@@ -25,6 +27,7 @@ const JoinClubModal = ({ trigger }: JoinClubModalProps) => {
     motivation: "",
     experience: "",
     skills: "",
+    discordUsername: "",
     githubUsername: "",
     linkedinUsername: ""
   });
@@ -57,45 +60,40 @@ const JoinClubModal = ({ trigger }: JoinClubModalProps) => {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.rpc('submit_club_application', {
-        applicant_email: formData.email,
-        applicant_name: formData.fullName,
-        motivation_text: formData.motivation,
-        experience_text: formData.experience || null,
-        skills_list: skillsList.length > 0 ? skillsList : null,
-        github_user: formData.githubUsername || null,
-        linkedin_user: formData.linkedinUsername || null
-      });
+      const { error } = await supabase
+        .from('member_applications')
+        .insert([{
+          user_id: user?.id,
+          full_name: formData.fullName,
+          email: formData.email,
+          motivation: formData.motivation,
+          experience_level: formData.experience || 'beginner',
+          skills: skillsList.length > 0 ? skillsList : null,
+          discord_username: formData.discordUsername || null,
+          github_username: formData.githubUsername || null,
+          linkedin_username: formData.linkedinUsername || null
+        }]);
 
       if (error) throw error;
 
-      const result = data as { success: boolean; message: string };
-
-      if (result.success) {
-        toast({
-          title: "Application Submitted!",
-          description: result.message,
-        });
-        
-        // Reset form
-        setFormData({
-          email: "",
-          fullName: "",
-          motivation: "",
-          experience: "",
-          skills: "",
-          githubUsername: "",
-          linkedinUsername: ""
-        });
-        setSkillsList([]);
-        setOpen(false);
-      } else {
-        toast({
-          title: "Application Error",
-          description: result.message,
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Application Submitted!",
+        description: "Your application has been submitted successfully. We'll review it and get back to you soon!",
+      });
+      
+      // Reset form
+      setFormData({
+        email: "",
+        fullName: "",
+        motivation: "",
+        experience: "",
+        skills: "",
+        discordUsername: "",
+        githubUsername: "",
+        linkedinUsername: ""
+      });
+      setSkillsList([]);
+      setOpen(false);
     } catch (error) {
       console.error('Application submission error:', error);
       toast({

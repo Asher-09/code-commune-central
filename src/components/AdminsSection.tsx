@@ -28,8 +28,8 @@ const AdminsSection = () => {
         const { data, error } = await supabase
           .from('admins')
           .select('*')
-          .eq('is_active', true)
-          .order('display_order', { ascending: true });
+          .eq('status', 'active')
+          .order('created_at', { ascending: true });
 
         if (error) {
           throw error;

@@ -14,13 +14,314 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admins: {
+        Row: {
+          achievements: string[] | null
+          bio: string | null
+          created_at: string
+          expertise: string[] | null
+          id: string
+          name: string
+          role: string
+          social_links: Json | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          achievements?: string[] | null
+          bio?: string | null
+          created_at?: string
+          expertise?: string[] | null
+          id?: string
+          name: string
+          role: string
+          social_links?: Json | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          achievements?: string[] | null
+          bio?: string | null
+          created_at?: string
+          expertise?: string[] | null
+          id?: string
+          name?: string
+          role?: string
+          social_links?: Json | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          subject?: string
+        }
+        Relationships: []
+      }
+      event_registrations: {
+        Row: {
+          event_id: string
+          id: string
+          registered_at: string
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          registered_at?: string
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          registered_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          current_participants: number | null
+          description: string | null
+          event_date: string
+          id: string
+          location: string
+          max_participants: number | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          current_participants?: number | null
+          description?: string | null
+          event_date: string
+          id?: string
+          location: string
+          max_participants?: number | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          current_participants?: number | null
+          description?: string | null
+          event_date?: string
+          id?: string
+          location?: string
+          max_participants?: number | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url: string
+          title: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      member_applications: {
+        Row: {
+          created_at: string
+          discord_username: string | null
+          email: string
+          experience_level: string
+          full_name: string
+          github_username: string | null
+          id: string
+          linkedin_username: string | null
+          motivation: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          skills: string[] | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          discord_username?: string | null
+          email: string
+          experience_level: string
+          full_name: string
+          github_username?: string | null
+          id?: string
+          linkedin_username?: string | null
+          motivation: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          skills?: string[] | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          discord_username?: string | null
+          email?: string
+          experience_level?: string
+          full_name?: string
+          github_username?: string | null
+          id?: string
+          linkedin_username?: string | null
+          motivation?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          skills?: string[] | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscriptions: {
+        Row: {
+          email: string
+          id: string
+          subscribed_at: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          subscribed_at?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          subscribed_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          discord_username: string | null
+          full_name: string
+          github_username: string | null
+          id: string
+          linkedin_username: string | null
+          role: string | null
+          skills: string[] | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          discord_username?: string | null
+          full_name: string
+          github_username?: string | null
+          id?: string
+          linkedin_username?: string | null
+          role?: string | null
+          skills?: string[] | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          discord_username?: string | null
+          full_name?: string
+          github_username?: string | null
+          id?: string
+          linkedin_username?: string | null
+          role?: string | null
+          skills?: string[] | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      stats: {
+        Row: {
+          id: string
+          stat_name: string
+          stat_value: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          stat_name: string
+          stat_value: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          stat_name?: string
+          stat_value?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

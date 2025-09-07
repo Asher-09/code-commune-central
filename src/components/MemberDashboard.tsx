@@ -194,7 +194,7 @@ const MemberDashboard = () => {
                 Member Dashboard
               </h1>
               <p className="text-muted-foreground">
-                Welcome back, {profile?.full_name || profile?.email}
+                Welcome back, {profile?.full_name}
               </p>
             </div>
             <Button

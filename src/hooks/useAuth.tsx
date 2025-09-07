@@ -4,14 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface Profile {
   id: string;
-  email: string;
+  user_id: string;
   full_name: string | null;
   role: 'admin' | 'member';
   status: 'pending' | 'approved' | 'rejected';
   bio: string | null;
   skills: string[] | null;
+  discord_username: string | null;
   github_username: string | null;
   linkedin_username: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 interface AuthContextType {

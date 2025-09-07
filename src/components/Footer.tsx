@@ -44,33 +44,32 @@ const Footer = () => {
     setIsSubscribing(true);
     
     try {
-      const { data, error } = await supabase.rpc('subscribe_newsletter', {
-        subscriber_email: email,
-        subscriber_name: null
-      });
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert([{ email }]);
 
-      if (error) throw error;
-
-      const result = data as { success: boolean; message: string };
-
-      if (result.success) {
-        toast({
-          title: "Success!",
-          description: result.message,
-        });
-        setEmail("");
+      if (error) {
+        if (error.code === '23505') {
+          toast({
+            title: "Already subscribed!",
+            description: "This email is already subscribed to our newsletter.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
       } else {
         toast({
-          title: "Error",
-          description: result.message,
-          variant: "destructive",
+          title: "Success!",
+          description: "You've been subscribed to our newsletter!",
         });
+        setEmail("");
       }
     } catch (error) {
       console.error('Newsletter subscription error:', error);
       toast({
         title: "Error",
-        description: "Failed to subscribe to newsletter",
+        description: "Failed to subscribe to newsletter. Please try again.",
         variant: "destructive",
       });
     } finally {
